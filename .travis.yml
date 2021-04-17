@@ -1,0 +1,25 @@
+os: linux
+
+language: go
+
+go:
+  - 1.14.x
+
+services:
+  - docker
+
+script:
+  # Test the code
+  - go test -v ./...
+  # Build the code
+  - CGO_ENABLED=0 GOARCH=amd64 go build -v -o cd2021-ex04
+  # Login to to dockerhub
+  - echo "$REGISTRY_PASSWORD" | docker login --username $REGISTRY_USER --password-stdin
+  # Build the docker image
+  - docker build -f Dockerfile -t ju135/cd2021-ex04:latest ./
+  # Tag the image
+  - GIT_SHA="$(git rev-parse --short HEAD)"
+  - docker tag ju135/cd2021-ex04:latest ju135/cd2021-ex04:$GIT_SHA
+  # Push the image
+  - docker push ju135/cd2021-ex04:latest
+  - docker push ju135/cd2021-ex04:$GIT_SHA
