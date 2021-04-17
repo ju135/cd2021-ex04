@@ -15,7 +15,6 @@ RUN ls
 # Build the GO app as myapp binary and move it to /usr/
 RUN go build -o /usr/myapp
 
-
 #Expose port 8888
 EXPOSE 8888
 
